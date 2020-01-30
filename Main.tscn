@@ -1,0 +1,70 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Main.gd" type="Script" id=1]
+[ext_resource path="res://Mob.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Bump.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://HUD.tscn" type="PackedScene" id=5]
+[ext_resource path="res://art/House In a Forest Loop.ogg" type="AudioStream" id=6]
+[ext_resource path="res://art/gameover.wav" type="AudioStream" id=7]
+[ext_resource path="res://Treasure.tscn" type="PackedScene" id=8]
+
+[sub_resource type="Curve2D" id=1]
+_data = {
+"points": PoolVector2Array( 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 1914, 6.59999, 0, 0, 0, 0, 1916.2, 1078, 0, 0, 0, 0, 4, 1075, 0, 0, 0, 0, 6, 6 )
+}
+
+[node name="Main" type="Node"]
+script = ExtResource( 1 )
+Mob = ExtResource( 2 )
+Bump = ExtResource( 3 )
+
+[node name="ColorRect" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.223529, 0.317647, 0.368627, 1 )
+
+[node name="Player" parent="." instance=ExtResource( 4 )]
+
+[node name="MobTimer" type="Timer" parent="."]
+
+[node name="ScoreTimer" type="Timer" parent="."]
+
+[node name="StartTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="StartPosition" type="Position2D" parent="."]
+position = Vector2( 900, 500 )
+
+[node name="MobPath" type="Path2D" parent="."]
+curve = SubResource( 1 )
+
+[node name="MobSpawnLocation" type="PathFollow2D" parent="MobPath"]
+position = Vector2( 6, 6 )
+rotation = 0.000314602
+
+[node name="HUD" parent="." instance=ExtResource( 5 )]
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+
+[node name="Treasure" parent="." instance=ExtResource( 8 )]
+
+[node name="BumpTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[node name="BumpSpawnTimer" type="Timer" parent="."]
+[connection signal="hit" from="Player" to="." method="game_over"]
+[connection signal="hit_bump" from="Player" to="." method="_on_Player_hit_bump"]
+[connection signal="hit_treasure" from="Player" to="." method="get_bonus_points"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_MobTimer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_ScoreTimer_timeout"]
+[connection signal="timeout" from="StartTimer" to="." method="_on_StartTimer_timeout"]
+[connection signal="start_game" from="HUD" to="." method="new_game"]
+[connection signal="timeout" from="BumpTimer" to="." method="_on_BumpTimer_timeout"]
+[connection signal="timeout" from="BumpSpawnTimer" to="." method="_on_BumpSpawnTimer_timeout"]

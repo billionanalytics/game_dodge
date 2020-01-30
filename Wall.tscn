@@ -1,0 +1,25 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Wall.gd" type="Script" id=1]
+[ext_resource path="res://art/set3_tiles.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 435.383, 72.1037 )
+
+[node name="Wall" type="StaticBody2D"]
+collision_mask = 0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( 912.328, 385.173 )
+scale = Vector2( 1.36275, 0.2785 )
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 913.287, 382.775 )
+shape = SubResource( 1 )
+
+[node name="WallNotifier2D" type="VisibilityNotifier2D" parent="."]
